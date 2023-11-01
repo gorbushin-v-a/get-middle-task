@@ -3,6 +3,8 @@ package com.example.middletask.Model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+// Класс, используемый для связи интерфейса приложения и кода
+// Обозначает сущность заказ с полями id, название, заказчик, дата заказа и цена
 public class Order {
     private SimpleIntegerProperty id;
     private SimpleStringProperty product;

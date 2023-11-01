@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+// Класс, запускающий окно логина
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {

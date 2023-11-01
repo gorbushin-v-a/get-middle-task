@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Класс, содержащий логику элементов окна логина
 public class LoginController {
     @FXML
     private TextField fieldUrl;
@@ -25,6 +26,8 @@ public class LoginController {
     @FXML
     private Label labelState;
 
+    // метод получает данные от пользователя и передаёт в основное окно, которое и запускает, закрывает окно логина
+    // в случае неудачи выводит ошибку в верхней части окна
     @FXML
     protected void onLoginButtonClick(ActionEvent ae) throws IOException {
         String url = fieldUrl.getText();

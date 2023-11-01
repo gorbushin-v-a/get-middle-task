@@ -13,21 +13,24 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+// Класс, содержащий логику элементов основного окна
 public class MainController {
+
+    // Данные для подключения к бд и количество записей для на одной странице (пагинация)
     private String url;
     private String user;
     private String password;
-
     private int rowsPerPage = 10;
+
+    // Элементы вкладки "Клиент", связаны с интерфейсом приложения
     private final FileChooser clientFileChooser = new FileChooser();
     private ObservableList<Client> listClients;
 
@@ -56,8 +59,7 @@ public class MainController {
     @FXML
     private TextField clientIDField;
 
-
-
+    // Элементы вкладки "Заказ", связаны с интерфейсом приложения
     private ObservableList<Order> listOrders;
     private final FileChooser orderFileChooser = new FileChooser();
 
@@ -86,8 +88,8 @@ public class MainController {
     @FXML
     private TextField orderPriceField;
 
-
-
+    // основной метод отображения информации в приложении
+    // Отображает информацию в таблицах и выпадающем меню клиентов
     public void initialize(){
         Platform.runLater(() -> {
             listClients = FXCollections.observableArrayList();
@@ -150,28 +152,15 @@ public class MainController {
         });
     }
 
-    private Node createClientPage(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage;
-        int toIndex = Math.min(fromIndex + rowsPerPage, listClients.size());
-        client.setItems(FXCollections.observableArrayList(listClients.subList(fromIndex, toIndex)));
-        return new BorderPane(client);
-    }
 
-    private Node createOrderPage(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage;
-        int toIndex = Math.min(fromIndex + rowsPerPage, listOrders.size());
-        order.setItems(FXCollections.observableArrayList(listOrders.subList(fromIndex, toIndex)));
-        return new BorderPane(order);
-    }
-
+    // Методы, связанные с кнопками и дающие им функциональность
+    // Вкладка "Клиенты"
+    // Метод добавления клиента
     @FXML
     protected void onAddClientButtonClick(){
         if(!(clientFirstnameField.getText().isEmpty()&&clientLastnameField.getText()
                 .isEmpty()&&clientEmailField.getText().isEmpty()&&clientPhoneField.getText().isEmpty())) {
             try (Connection connection = DriverManager.getConnection(url, user, password)) {
-
-//                System.out.println(connection.isValid(0));
-
                 PreparedStatement ps = connection.prepareStatement(
                         "INSERT INTO Clients(firstname, lastname, email, phone) VALUES('"
                                 + clientFirstnameField.getText() + "', '"
@@ -186,13 +175,11 @@ public class MainController {
         }
     }
 
+    // Метод удаления клиента
     @FXML
     protected void onDeleteClientButtonClick(){
         if(!clientIDField.getText().replaceAll("\\D", "").isEmpty()) {
             try (Connection connection = DriverManager.getConnection (url, user,password)){
-
-//                System.out.println(connection.isValid(0));
-
                 PreparedStatement ps = connection.prepareStatement("DELETE FROM Clients WHERE ID="
                         +clientIDField.getText().replaceAll("\\D", "")+";");
                 ps.execute();
@@ -203,13 +190,11 @@ public class MainController {
         }
     }
 
+    // Метод изменения клиента
     @FXML
     protected void onUpdateClientButtonClick(){
         if(!clientIDField.getText().replaceAll("[^\\d]", "").isEmpty()) {
             try (Connection connection = DriverManager.getConnection (url, user,password)){
-
-//            System.out.println(connection.isValid(0));
-
                 String query = "UPDATE Clients ";
                 boolean flag = false;
                 if(!clientFirstnameField.getText().isEmpty()){
@@ -252,6 +237,7 @@ public class MainController {
         }
     }
 
+    // Метод поиска/фильтрации клиентов
     @FXML
     protected void onSearchClientButtonClick(){
         String queryWhere = "";
@@ -327,6 +313,8 @@ public class MainController {
         }
     }
 
+    // Метод загрузки клиентов из CSV файла
+    // Открывает дополнительное окно выбора файла
     @FXML
     protected void onOpenFileClientButtonClick(ActionEvent ae){
         configureFileChooser(clientFileChooser);
@@ -351,31 +339,8 @@ public class MainController {
         }
     }
 
-    private void readInputStreamToDB(InputStream inputStream) throws IOException {
-//        String resultStringBuilder = "";
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "Cp1251"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-//                resultStringBuilder.append(line).append("\n");
-                String[] parts = line.split(",");
-                try (Connection connection = DriverManager.getConnection(url, user, password)) {
-
-//                System.out.println(connection.isValid(0));
-
-                    PreparedStatement ps = connection.prepareStatement(
-                            "INSERT INTO Clients(firstname, lastname, email, phone) VALUES('"
-                                    + parts[0] + "', '"
-                                    + parts[1] + "', '"
-                                    + parts[2] + "', '"
-                                    + parts[3] + "')");
-                    ps.execute();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
+    // Метод сохранения клиентов в CSV файл
+    // Открывает дополнительное окно выбора файла
     @FXML
     protected void onSaveFileClientButtonClick(ActionEvent ae){
         FileChooser fileChooser = new FileChooser();
@@ -383,16 +348,12 @@ public class MainController {
         fileChooser.setTitle("Save CSV");
         Node source = (Node) ae.getSource();
         Window stage = source.getScene().getWindow();
-//        System.out.println(pic.getId());
         File file = fileChooser.showSaveDialog(stage);
         List<String[]> dataLines = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection (url, user,password)){
-//            System.out.println(connection.isValid(0));
-
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Clients");
             ResultSet resultSet = ps.executeQuery();
             while(resultSet.next()){
-//                System.out.println(resultSet.getInt(1)+" "+resultSet.getString(2));
                 dataLines.add(new String[]
                         {String.valueOf(resultSet.getInt(1)),
                                 resultSet.getString(2),
@@ -411,43 +372,9 @@ public class MainController {
         }
     }
 
-    public String convertToCSV(String[] data) {
-        return Stream.of(data)
-                .map(this::escapeSpecialCharacters)
-                .collect(Collectors.joining(","));
-    }
 
-    public String escapeSpecialCharacters(String data) {
-        String escapedData = data.replaceAll("\\R", " ");
-        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
-            data = data.replace("\"", "\"\"");
-            escapedData = "\"" + data + "\"";
-        }
-        return escapedData;
-    }
-
-    private static void configureFileChooser(final FileChooser fileChooser) {
-        fileChooser.setTitle("View files");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CSV", "*.csv"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    // Tab
-
+    // Вкладка "Заказы"
+    // Метод добавления заказа
     @FXML
     protected void onAddOrderButtonClick(){
         if(!(orderProductField.getText().isEmpty()&&orderChoiceBox.getValue()
@@ -467,6 +394,7 @@ public class MainController {
         }
     }
 
+    // Метод удаления заказа
     @FXML
     protected void onDeleteOrderButtonClick(){
         if(!orderIDField.getText().replaceAll("\\D", "").isEmpty()) {
@@ -481,6 +409,7 @@ public class MainController {
         }
     }
 
+    // Метод изменения заказа
     @FXML
     protected void onUpdateOrderButtonClick(){
         if(!orderIDField.getText().replaceAll("[^\\d]", "").isEmpty()) {
@@ -527,6 +456,7 @@ public class MainController {
         }
     }
 
+    // Метод поиска/фильтрации заказов
     @FXML
     protected void onSearchOrderButtonClick() {
         String queryWhere = "";
@@ -598,6 +528,8 @@ public class MainController {
         }
     }
 
+    // Метод загрузки заказов из CSV файла
+    // Открывает дополнительное окно выбора файла
     @FXML
     protected void onOpenFileOrderButtonClick(ActionEvent ae){
         configureFileChooser(orderFileChooser);
@@ -622,26 +554,8 @@ public class MainController {
         }
     }
 
-    private void readInputOrderStreamToDB(InputStream inputStream) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "Cp1251"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-                try (Connection connection = DriverManager.getConnection(url, user, password)) {
-                    PreparedStatement ps = connection.prepareStatement(
-                            "INSERT INTO Orders(product, client, date, price) VALUES('"
-                                    + parts[0] + "', '"
-                                    + parts[1] + "', '"
-                                    + parts[2] + "', '"
-                                    + parts[3] + "')");
-                    ps.execute();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
+    // Метод сохранения заказов в CSV файл
+    // Открывает дополнительное окно выбора файла
     @FXML
     protected void onSaveFileOrderButtonClick(ActionEvent ae){
         FileChooser fileChooser = new FileChooser();
@@ -673,5 +587,96 @@ public class MainController {
             throw new RuntimeException(e);
         }
     }
-}
 
+    // Дополнительные методы
+    // Сеттеры для записи в приватные поля
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public void setUser(String user) {
+        this.user = user;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // Дополнительные медоты к методам сохранения в CSV
+    // Преобразуют записи в подходящий для данного формата вариант
+    public String convertToCSV(String[] data) {
+        return Stream.of(data)
+                .map(this::escapeSpecialCharacters)
+                .collect(Collectors.joining(","));
+    }
+    public String escapeSpecialCharacters(String data) {
+        String escapedData = data.replaceAll("\\R", " ");
+        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
+            data = data.replace("\"", "\"\"");
+            escapedData = "\"" + data + "\"";
+        }
+        return escapedData;
+    }
+
+    // Метод настройки окна выбора файла
+    private static void configureFileChooser(final FileChooser fileChooser) {
+        fileChooser.setTitle("View files");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("CSV", "*.csv"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+    }
+
+    // вспомогательные методы загрузки данных из файла
+    // читают и записывают в базу данных
+    private void readInputStreamToDB(InputStream inputStream) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "Cp1251"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                try (Connection connection = DriverManager.getConnection(url, user, password)) {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "INSERT INTO Clients(firstname, lastname, email, phone) VALUES('"
+                                    + parts[0] + "', '"
+                                    + parts[1] + "', '"
+                                    + parts[2] + "', '"
+                                    + parts[3] + "')");
+                    ps.execute();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+    private void readInputOrderStreamToDB(InputStream inputStream) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "Cp1251"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                try (Connection connection = DriverManager.getConnection(url, user, password)) {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "INSERT INTO Orders(product, client, date, price) VALUES('"
+                                    + parts[0] + "', '"
+                                    + parts[1] + "', '"
+                                    + parts[2] + "', '"
+                                    + parts[3] + "')");
+                    ps.execute();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    // методы, создающие страницы таблицы
+    private Node createClientPage(int pageIndex) {
+        int fromIndex = pageIndex * rowsPerPage;
+        int toIndex = Math.min(fromIndex + rowsPerPage, listClients.size());
+        client.setItems(FXCollections.observableArrayList(listClients.subList(fromIndex, toIndex)));
+        return new BorderPane(client);
+    }
+    private Node createOrderPage(int pageIndex) {
+        int fromIndex = pageIndex * rowsPerPage;
+        int toIndex = Math.min(fromIndex + rowsPerPage, listOrders.size());
+        order.setItems(FXCollections.observableArrayList(listOrders.subList(fromIndex, toIndex)));
+        return new BorderPane(order);
+    }
+}

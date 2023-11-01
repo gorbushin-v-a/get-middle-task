@@ -3,6 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!--файл разметки для основного окна приложения окна-->
+<!--содержит 2 страницы, в которых находятся таблицы, кнопки и поля ввода-->
+<!--BorderPane использовался для "гибкости" интерфейса приложения-->
 <BorderPane prefHeight="410.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.middletask.Controller.MainController">
     <center>
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
