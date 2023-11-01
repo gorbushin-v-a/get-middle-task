@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.middletask.Controller.LoginController">
+
+    <Label fx:id="labelState" alignment="CENTER" layoutY="34.0" prefHeight="18.0" prefWidth="304.0" text="Welcome" />
+    <Button layoutX="124.0" layoutY="234.0" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
+    <TextField fx:id="fieldUrl" layoutX="61.0" layoutY="92.0" prefWidth="170.0" promptText="Введите url" text="jdbc:h2:tcp://localhost/~/testdb" />
+    <TextField fx:id="fieldName" layoutX="61.0" layoutY="137.0" prefWidth="170.0" promptText="Введите имя пользователя" text="user" />
+    <TextField fx:id="fieldPasswd" layoutX="61.0" layoutY="178.0" prefWidth="170.0" promptText="Введите пароль" text="user" />
+
+</AnchorPane>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="410.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.middletask.Controller.MainController">
+    <center>
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <Tab text="Клиенты">
+                <BorderPane>
+                    <top>
+                        <TableView fx:id="client" prefHeight="251.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                            <columns>
+                                <TableColumn fx:id="clientID" prefWidth="130.0" text="ID" />
+                                <TableColumn fx:id="clientFirstname" prefWidth="130.0" text="Имя" />
+                                <TableColumn fx:id="clientLastname" prefWidth="130.0" text="Фамилия" />
+                                <TableColumn fx:id="clientEmail" prefWidth="130.0" text="e-Mail" />
+                                <TableColumn fx:id="clientPhone" prefWidth="130.0" text="Телефон" />
+                            </columns>
+                        </TableView>
+                    </top>
+                    <center>
+                        <Pagination fx:id="paginationClient" prefHeight="42.0" prefWidth="700.0" BorderPane.alignment="CENTER" />
+                    </center>
+                    <bottom>
+                        <VBox prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                            <ToolBar prefHeight="40.0" prefWidth="600.0">
+                                <TextField fx:id="clientIDField" prefWidth="60.0" promptText="id" />
+                                <TextField fx:id="clientFirstnameField" prefWidth="100.0" promptText="Введите имя" />
+                                <TextField fx:id="clientLastnameField" prefWidth="160.0" promptText="Введите фамилию" />
+                                <TextField fx:id="clientEmailField" prefWidth="100.0" promptText="Введите e-Mail" />
+                                <TextField fx:id="clientPhoneField" prefWidth="160.0" promptText="Введите номер телефона" />
+                            </ToolBar>
+                            <ToolBar prefHeight="40.0" prefWidth="600.0">
+                                <Button onAction="#onAddClientButtonClick" mnemonicParsing="false" text="Добавить" />
+                                <Button onAction="#onUpdateClientButtonClick" mnemonicParsing="false" text="Редактировать" />
+                                <Button onAction="#onDeleteClientButtonClick" mnemonicParsing="false" text="Удалить" />
+                                <Button onAction="#onSearchClientButtonClick" mnemonicParsing="false" text="Найти" />
+                                <Button onAction="#onOpenFileClientButtonClick" mnemonicParsing="false" text="Загрузить" />
+                                <Button onAction="#onSaveFileClientButtonClick" mnemonicParsing="false" text="Сохранить" />
+                            </ToolBar>
+                        </VBox>
+                    </bottom>
+                </BorderPane>
+            </Tab>
+            <Tab text="Заказы">
+                <BorderPane>
+                    <top>
+                        <TableView fx:id="order" prefHeight="251.0" prefWidth="600.0">
+                            <columns>
+                                <TableColumn fx:id="orderID" prefWidth="130.0" text="ID" />
+                                <TableColumn fx:id="orderProduct" prefWidth="130.0" text="Название" />
+                                <TableColumn fx:id="orderClient" prefWidth="130.0" text="Заказчик" />
+                                <TableColumn fx:id="orderDate" prefWidth="130.0" text="Дата заказа" />
+                                <TableColumn fx:id="orderPrice" prefWidth="130.0" text="Цена" />
+                            </columns>
+                        </TableView>
+                    </top>
+                    <center>
+                        <Pagination fx:id="paginationOrder" prefHeight="42.0" prefWidth="700.0" BorderPane.alignment="CENTER" />
+                    </center>
+                    <bottom>
+                        <VBox prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                            <ToolBar prefHeight="40.0" prefWidth="600.0">
+                                <TextField fx:id="orderIDField" prefWidth="60.0" promptText="id" />
+                                <TextField fx:id="orderProductField" prefWidth="160.0" promptText="Введите название товара" />
+                                <ChoiceBox fx:id="orderChoiceBox" prefWidth="160.0" value="Выберите заказчика" />
+                                <DatePicker fx:id="orderDatePicker" editable="false" prefWidth="120.0" promptText="Дата" />
+                                <TextField fx:id="orderPriceField" prefWidth="120.0" promptText="Стоимость" />
+                            </ToolBar>
+                            <ToolBar prefHeight="40.0" prefWidth="600.0">
+                                <Button onAction="#onAddOrderButtonClick" mnemonicParsing="false" text="Добавить" />
+                                <Button onAction="#onUpdateOrderButtonClick" mnemonicParsing="false" text="Редактировать" />
+                                <Button onAction="#onDeleteOrderButtonClick" mnemonicParsing="false" text="Удалить" />
+                                <Button onAction="#onSearchOrderButtonClick" mnemonicParsing="false" text="Найти" />
+                                <Button onAction="#onOpenFileOrderButtonClick" mnemonicParsing="false" text="Загрузить" />
+                                <Button onAction="#onSaveFileOrderButtonClick" mnemonicParsing="false" text="Сохранить" />
+                            </ToolBar>
+                        </VBox>
+                    </bottom>
+                </BorderPane>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
