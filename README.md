@@ -1,10 +1,12 @@
-# middle-task-1
+# get-middle-task
 Комментарии о работе:
 Используемый JDK - Azul Zulu JDK FX (java 17).
 База данных H2 2.1.214 (Server).
 
 Скрипты создания таблиц:
+
 CREATE TABLE Clients(ID BIGINT AUTO_INCREMENT, firstname VARCHAR(100), lastname VARCHAR(100), email VARCHAR(40), phone VARCHAR(20));
+
 CREATE TABLE Orders(ID BIGINT AUTO_INCREMENT, product VARCHAR(100), client VARCHAR(100), date VARCHAR(20), price VARCHAR(40));
 
 Приложение подключается к созданной базе данных и требует на входе, в основном, те же данные, что H2 Console.
